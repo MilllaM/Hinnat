@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <title>Document</title>
+    <style type="text/css">
+        body {
+        font-family: 'Roboto', sans-serif;
+        }
+        .center {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 40px;
+            width: 50%;
+        }
+        table {
+            margin-top: 60px;
+        }
+
+        th {
+            text-align: right;
+        }
+        h1 {
+            text-align: center;
+            color: #4298DB;
+        }
+        h3 {
+            text-align: center;
+        }
+        h5 {
+            color: green;
+            font-size: 12px;
+        }
+        .submitButton {
+            background-color:#4298DB;
+            -moz-border-radius:6px;
+            -webkit-border-radius:6px;
+            border-radius:6px;
+            display:inline-block;
+            cursor:pointer;
+            color:#ffffff;
+            font-size:17px;
+            font-weight:bold;
+            padding:12px 44px;
+            text-decoration:none;
+            
+        }
+        
+       
+    </style>
+    <script src="https://code.jquery.com/jquery-3.4.1.js"
+    integrity="sha256-WpOohJOqMqqyKL9FccASB9O0KwACQJpFTUBLTYOVvVU="
+    crossorigin="anonymous" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        
+        $(document).ready(function() {
+             //read from cookie on form load
+            var remember = Cookies.get('remember');
+            //if (remember == 'true') {
+            if (remember == 'on') {
+                var userUrl = Cookies.get('userUrl');
+                var userToken = Cookies.get('userToken');
+                var itemList = Cookies.get('itemList');
+                //autofill
+                $('#url_tobe_checked').attr('value', userUrl);
+                $('#token_tobe_checked').attr('value', userToken);
+                $('#rememberChkBox').attr('checked', 'checked');         
+                $('#item_list_tobe_used').attr('value', itemList);         
+            } else {                
+                $('#url_tobe_checked').val(''); //compare w/ earlier block: different syntax
+                $('#token_tobe_checked').val('');
+                $('#rememberChkBox').removeAttr('checked');
+                $('#item_list_tobe_used').val('');
+            }
+
+            $('#rememberChkBox').click(function () {
+                if ($('#rememberChkBox').is(':checked')) { //if user ticked the "remember me" checkbox
+                    // store into cookie
+                    var url_tobeused = $('#url_tobe_checked').val();
+                    var token_tobeused = $('#token_tobe_checked').val();
+                    var chkbox = $('#rememberChkBox').val();
+                    var itemlist = $('#item_list_tobe_used').val();
+                    //set cookie to expire in 90 days
+                    Cookies.set('userUrl', url_tobeused, {expires: 90});
+                    Cookies.set('userToken', token_tobeused, {expires: 90});                             
+                    Cookies.set('remember', chkbox, {expires: 90});                                    
+                    Cookies.set('itemList', itemlist, {expires: 90});                                    
+                } else {
+                    //reset cookies
+                    Cookies.remove('userUrl');
+                    Cookies.remove('userToken');
+                    Cookies.remove('remember');
+                    Cookies.remove('itemList');
+                }
+            });
+
+            $('#btn-one').click(function() {
+                $('#btn-one').html('<span class="spinner-border spinner-border-sm mr-2" role="status" aria-hidden="true"></span>Loading...').addClass('disabled');
+            });
+        });
+
+    </script>
+</head>
+<body>
+    <img src="http://localhost/path/logo-rgb.png" alt="logo" class="center">
+    <h1>Price list updates</h1>
+    <h3>Get your new wholesaler price list info updated via REST API</h3>
+
+    <table cellpadding="5" cellspacing="10" align="center">
+        <form method="post" enctype="multipart/form-data" name="pricingForm">
+            
+            <tr><th>REST API URL: </th><td><input type="text" name="url_tobe_checked" id="url_tobe_checked" placeholder="URL" size="40"></td></tr>
+            <tr><th>REST API Token: </th><td><input type="text" name="token_tobe_checked" id="token_tobe_checked" placeholder="Token" size="40"></td></tr>
+            <tr><th>Give the Item list to be updated: </th><td><input type="text" name="item_list_tobe_used" id="item_list_tobe_used" placeholder="Item list nbr" size="10"></td></tr>
+
+            <tr><td colspan="8" align ="center"  style="font-size: 12px"><input type="checkbox" name="rememberChkBox" id="rememberChkBox">Remember my credentials</td></tr>       
+            
+            <tr><th>Select the new pricing file: </th><td style="padding: 5px"><input type="file" name="uudethinnat" ></td></tr>
+    
+            <tr><td colspan="2" align="right"><button type="submit" id="btn-one" name="submit" class="btn btn-primary submitButton">Send the file</button></td></tr>        
+        </form>
+    </table>
+
+</body>
+</html>
